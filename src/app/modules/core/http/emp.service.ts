@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 import { BaseService } from '../http/base.service';
 import { ExportPK } from '../../shared/models/dto/requests/export-pk';
 import { map, tap } from 'rxjs/operators';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -27,8 +28,7 @@ export class EmpService extends BaseService  {
      return this.httpClient.post<IResultDto<string[]>>(url, { filePath: data.filePath, startDate:data.startDate, endDate:data.endDate, pNs:data.pNs}, options)
          .pipe(map((res: any) => this.processResult(res)))
     }
-
-    
+ 
   DataCheck(data: ExportPK):Observable<IResultDto<string>>
   {
     const url = `${environment.apiBaseUrl}/EqmAFortyCompare/DataCheck`;
@@ -38,7 +38,9 @@ export class EmpService extends BaseService  {
           .pipe(map((res: any) => this.processResult(res)))
   }
 
-  ExportPK(data: ExportPK):Observable<any>{
+  ExportPK(data: ExportPK):Observable<any>
+  {
+    let dt = moment().format("YYYYMMDDHHmmss");
     const url = `${environment.apiBaseUrl}/EqmAFortyCompare/ExportPK`;
     const options:any = this.generatePostOptions();
     options.responseType = 'arraybuffer';
@@ -46,7 +48,7 @@ export class EmpService extends BaseService  {
     return this.httpClient.post(url, { filePath: data.filePath, startDate:data.startDate, endDate:data.endDate, pNs:data.pNs}, options)
           .pipe(map(data => {
             this.downloadFile(
-              'PK_RESULT.xlsx',
+              `PK_RESULT_${dt}.xlsx`,
               data,
               'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             ) 

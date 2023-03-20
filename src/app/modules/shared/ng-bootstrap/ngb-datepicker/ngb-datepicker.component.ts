@@ -21,7 +21,7 @@ export class NgbDatepickerComponent implements OnInit
   {
     this.model = this._calendar.getToday()
 
-    if (this.inputAddDays && this.inputAddDays > 0)
+    if (this.inputAddDays)
     {
       let day :Date = new Date(`${this._calendar.getToday().year.toString()}-${this._calendar.getToday().month}-${this._calendar.getToday().day.toString()}`);
       day = new Date(day.setDate(day.getDate() + this.inputAddDays));
